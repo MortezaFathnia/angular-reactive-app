@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Course} from '../model/course';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Course } from '../model/course';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -13,8 +13,9 @@ import {
   withLatestFrom,
   concatAll, shareReplay
 } from 'rxjs/operators';
-import {merge, fromEvent, Observable, concat} from 'rxjs';
-import {Lesson} from '../model/lesson';
+import { merge, fromEvent, Observable, concat } from 'rxjs';
+import { Lesson } from '../model/lesson';
+import { CourseService } from '../services/courses.service';
 
 
 @Component({
@@ -24,7 +25,11 @@ import {Lesson} from '../model/lesson';
 })
 export class SearchLessonsComponent implements OnInit {
 
-  constructor() {
+  searchResult$: Observable<Lesson[]>;
+
+  activeLesson: Lesson;
+
+  constructor(private courseService: CourseService) {
 
 
   }
@@ -34,6 +39,17 @@ export class SearchLessonsComponent implements OnInit {
 
   }
 
+  onSearch(search: string) {
+    this.searchResult$ = this.courseService.searchLessons(search)
+  }
+
+  openLesson(lesson: Lesson) {
+    this.activeLesson = lesson;
+  }
+
+  onBackToSearch(){
+    this.activeLesson=null;
+  }
 }
 
 
